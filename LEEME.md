@@ -19,6 +19,7 @@ Es una sola página: no hay menú ni otras secciones. Todo lo editable está en 
 - El logo también se usa como icono de la pestaña del navegador.
 - Textos del botón de arriba, título, subtítulo e **imagen de la portada** (`imagenHero`).
 - **WhatsApp** (`573013614102` → tu número con código de país, sin `+`). Lo usan todos los botones.
+  - Botón verde flotante de WhatsApp (escritorio y celular): `botonFlotante: true/false` lo muestra u oculta y `textoBotonFlotante` cambia el texto que aparece al pasar el mouse.
 - Tarjeta morada "¿Necesitas asesoría?" y los 4 sellos de confianza de la columna izquierda.
 - **Contacto e información** (bloque al final de la página): teléfono, correo, dirección, horario y redes. Si dejas un campo vacío (`""`), no se muestra.
 - Rangos de edad del filtro y cuántos productos se ven antes de "Ver más".
@@ -33,6 +34,8 @@ Es una sola página: no hay menú ni otras secciones. Todo lo editable está en 
 - `edades`, `edadMin`, `edadMax` y `area` son opcionales: si no los pones, no se muestran, y los filtros de edad y área se ocultan solos cuando ningún producto los usa.
 - `meta` es una línea corta bajo la descripción de la tarjeta (ej. `"Disponible en 4 colores"`).
 - Un mismo modelo en varios colores = **un solo producto** con una foto por color en `imagenes`. Las miniaturas de la tarjeta y la galería muestran cada color.
+- **Mobiliario** es una sola categoría (sillas, armarios, y luego mesas y lockers). Para muebles con medidas, usa `ficha` con las filas `Largo`, `Ancho`, `Alto`, `Peso` y `Color` (o `Colores`).
+- Un mismo mueble que se muestra dentro de una foto de grupo: recorta una imagen por producto (proporción 4:3) y agrega la foto del grupo como segunda imagen.
 - Si la foto se ve cortada en la tarjeta: `ajuste: "contain"` la muestra completa (con `fondo: "#f6f6f6"` para igualar el fondo) o `posicion: "50% 60%"` mueve el encuadre.
 
 > Todos los textos, medidas, datos de contacto y fotos actuales son **ejemplos**. Reemplázalos por los reales.

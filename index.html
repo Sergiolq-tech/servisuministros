@@ -232,6 +232,24 @@ ul{list-style:none;margin:0;padding:0}
 .toast.is-on{opacity:1;transform:translate(-50%,0)}
 
 /* ============================================================
+   WHATSAPP FLOTANTE (escritorio y celular)
+   ============================================================ */
+.wa-float{position:fixed;z-index:60;right:calc(22px + env(safe-area-inset-right,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px));width:60px;height:60px;border-radius:50%;background:#25d366;color:#fff;display:grid;place-items:center;box-shadow:0 8px 22px rgba(18,140,70,.42),0 2px 6px rgba(29,24,56,.2);transition:background .15s,transform .15s,box-shadow .15s}
+.wa-float:hover{background:#1fbd5a;transform:translateY(-2px) scale(1.05);box-shadow:0 12px 28px rgba(18,140,70,.5),0 3px 8px rgba(29,24,56,.22)}
+.wa-float:focus-visible{outline:3px solid #fff;outline-offset:-3px;box-shadow:0 0 0 4px #128c46,0 8px 22px rgba(18,140,70,.42)}
+.wa-float svg{width:32px;height:32px;fill:currentColor;position:relative}
+.wa-float::before{content:"";position:absolute;inset:0;border-radius:50%;background:#25d366;opacity:.5;animation:wa-pulse 2.6s ease-out infinite;pointer-events:none}
+.wa-float__label{position:absolute;right:calc(100% + 12px);top:50%;transform:translate(6px,-50%);background:#fff;color:var(--ink);font:600 13px/1 var(--display);padding:10px 14px;border-radius:99px;box-shadow:var(--shadow-sm);border:1px solid var(--line);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s}
+@media (hover:hover){.wa-float:hover .wa-float__label,.wa-float:focus-visible .wa-float__label{opacity:1;transform:translate(0,-50%)}}
+@keyframes wa-pulse{0%{transform:scale(1);opacity:.5}70%,100%{transform:scale(1.55);opacity:0}}
+@media (max-width:600px){
+  .wa-float{width:56px;height:56px;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  .wa-float svg{width:30px;height:30px}
+  .wa-float__label{display:none}
+}
+@media (prefers-reduced-motion:reduce){.wa-float::before{animation:none;opacity:0}}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width:1120px){
@@ -425,6 +443,11 @@ ul{list-style:none;margin:0;padding:0}
     <div class="info" id="m-info"></div>
   </div>
 </div>
+<!-- ============================ WHATSAPP FLOTANTE ============================ -->
+<a class="wa-float" id="wa-float" href="#" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp" hidden>
+  <span class="wa-float__label" id="wa-float-label" aria-hidden="true">Escríbenos por WhatsApp</span>
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -454,6 +477,8 @@ const CONFIG = {
   mensajeGeneral: "Hola Servi Suministros JSG, quiero solicitar una cotización.",
   mensajeProducto: "Hola Servi Suministros JSG, quiero información y cotización del producto:",   // se le agrega el nombre del producto
   textoBotonProducto: "Cotizar por WhatsApp",
+  botonFlotante: true,                              // botón verde flotante de WhatsApp (escritorio y celular). false = ocultarlo
+  textoBotonFlotante: "Escríbenos por WhatsApp",    // texto que aparece al pasar el mouse (escritorio)
 
   /* ---- TARJETA MORADA "¿Necesitas asesoría?" (columna izquierda) ---- */
   asesoria: {
@@ -524,11 +549,11 @@ const CONFIG = {
    ================================================================== */
 const PRODUCTOS = [
 
-  /* ============ MOBILIARIO ESCOLAR ============ */
+  /* ============ MOBILIARIO ============ */
   {
     id: "silla-escolar-colores",
     nombre: "Silla escolar",
-    categoria: "Mobiliario escolar",
+    categoria: "Mobiliario",
     descripcion: "Silla escolar con estructura metálica y asiento y espaldar plásticos.",
     detalle: "Un mismo modelo disponible en cuatro colores: rojo, verde limón, verde oscuro y azul. Toca las miniaturas para ver cada color.",
     material: "Metal y plástico",
@@ -547,7 +572,7 @@ const PRODUCTOS = [
   {
     id: "silla-paleta-negra",
     nombre: "Silla con paleta negra",
-    categoria: "Mobiliario escolar",
+    categoria: "Mobiliario",
     descripcion: "Silla con paleta de apoyo y rejilla portalibros bajo el asiento.",
     detalle: "Silla con paleta para escribir y rejilla metálica debajo del asiento para guardar libros y cuadernos.",
     material: "Metal y plástico",
@@ -560,7 +585,7 @@ const PRODUCTOS = [
   {
     id: "silla-paleta-azul",
     nombre: "Silla con paleta azul",
-    categoria: "Mobiliario escolar",
+    categoria: "Mobiliario",
     descripcion: "Silla con paleta de apoyo y estructura metálica, en azul.",
     detalle: "Silla con paleta para escribir, asiento y espaldar plásticos en azul.",
     material: "Metal y plástico",
@@ -569,6 +594,116 @@ const PRODUCTOS = [
     imagenes: ["img/mobiliario_escolar blue_1.jpeg", "img/mobiliario_escolar blue_2.jpeg"],
     ficha: { "Color": "Azul", "Paleta": "Incluida" },
     caracteristicas: ["Paleta de apoyo incluida", "Estructura metálica", "Asiento y espaldar plásticos"]
+  },
+
+  /* ---- Armarios · línea 1 (gris) ---- */
+  {
+    id: "armario-grande-gris",
+    nombre: "Armario Grande gris",
+    categoria: "Mobiliario",
+    descripcion: "Armario alto de dos puertas con entrepaños interiores, en color gris.",
+    detalle: "Armario de 189 cm de alto. La segunda foto muestra toda la línea de armarios grises.",
+    meta: "Gris · Alto 189 cm",
+    imagenes: ["img/armario-1-grande.jpg", "img/armario-1-linea.jpg"],
+    ficha: { "Largo": "65,0 cm — 25,6\"", "Ancho": "45,0 cm — 17,7\"", "Alto": "189,0 cm — 74,4\"", "Peso": "15,5 kg — 34,2 lb", "Color": "Gris" },
+    caracteristicas: ["Dos puertas con manija", "Entrepaños interiores"]
+  },
+  {
+    id: "armario-multiusos-gris",
+    nombre: "Armario Multiusos gris",
+    categoria: "Mobiliario",
+    descripcion: "Armario alto de dos puertas con entrepaños y espacio vertical para escobas y elementos de aseo.",
+    detalle: "Armario multiusos de 189 cm de alto. La segunda foto muestra toda la línea de armarios grises.",
+    meta: "Gris · Alto 189 cm",
+    imagenes: ["img/armario-1-multiusos.jpg", "img/armario-1-linea.jpg"],
+    ficha: { "Largo": "65,0 cm — 25,6\"", "Ancho": "45,0 cm — 17,7\"", "Alto": "189,0 cm — 74,4\"", "Peso": "16,0 kg — 35,3 lb", "Color": "Gris" },
+    caracteristicas: ["Dos puertas con manija", "Entrepaños y espacio vertical para escobas y aseo"]
+  },
+  {
+    id: "armario-mediano-gris",
+    nombre: "Armario Mediano gris",
+    categoria: "Mobiliario",
+    descripcion: "Armario bajo de dos puertas con entrepaños interiores, en color gris.",
+    detalle: "Armario de 101,5 cm de alto. La segunda foto muestra toda la línea de armarios grises.",
+    meta: "Gris · Alto 101,5 cm",
+    imagenes: ["img/armario-1-mediano.jpg", "img/armario-1-linea.jpg"],
+    ficha: { "Largo": "65,0 cm — 25,6\"", "Ancho": "45,0 cm — 17,7\"", "Alto": "101,5 cm — 40,0\"", "Peso": "8,5 kg — 18,9 lb", "Color": "Gris" },
+    caracteristicas: ["Dos puertas con manija", "Entrepaños interiores"]
+  },
+
+  /* ---- Armarios · línea 2 (Taupe / Wengue) ---- */
+  {
+    id: "armario-grande-taupe-wengue",
+    nombre: "Armario Grande Taupe y Wengue",
+    categoria: "Mobiliario",
+    descripcion: "Armario alto de dos puertas con acabado de textura tipo tejido y entrepaños interiores.",
+    detalle: "Armario de 189 cm de alto, disponible en Taupe y en Wengue. En la foto se ve el color Wengue.",
+    meta: "Disponible en 2 colores · Alto 189 cm",
+    etiqueta: { texto: "2 colores", color: "naranja" },
+    imagenes: ["img/armario-2-grande.jpg", "img/armario-2-linea.jpg"],
+    ficha: { "Largo": "65,0 cm — 25,6\"", "Ancho": "45,0 cm — 17,7\"", "Alto": "189,0 cm — 74,4\"", "Peso": "15,4 kg — 33,9 lb", "Colores": "Taupe (10365) y Wengue (7188)" },
+    caracteristicas: ["Dos puertas con manija", "Entrepaños interiores", "Textura tipo tejido"]
+  },
+  {
+    id: "armario-mediano-taupe-wengue",
+    nombre: "Armario Mediano Taupe y Wengue",
+    categoria: "Mobiliario",
+    descripcion: "Armario bajo de dos puertas con acabado de textura tipo tejido y entrepaños interiores.",
+    detalle: "Armario de 101,5 cm de alto, disponible en Taupe y en Wengue. En la foto se ve el color Wengue.",
+    meta: "Disponible en 2 colores · Alto 101,5 cm",
+    etiqueta: { texto: "2 colores", color: "naranja" },
+    imagenes: ["img/armario-2-mediano.jpg", "img/armario-2-linea.jpg"],
+    ficha: { "Largo": "65,0 cm — 25,6\"", "Ancho": "45,0 cm — 17,7\"", "Alto": "101,5 cm — 40,0\"", "Peso": "8,5 kg — 18,7 lb", "Colores": "Taupe (10367) y Wengue (7189)" },
+    caracteristicas: ["Dos puertas con manija", "Entrepaños interiores", "Textura tipo tejido"]
+  },
+  {
+    id: "armario-gabinete-wengue",
+    nombre: "Armario Gabinete Wengue",
+    categoria: "Mobiliario",
+    descripcion: "Gabinete compacto de dos puertas con entrepaño interior y textura tipo tejido.",
+    detalle: "El más pequeño de la línea, con 70,5 cm de alto y 40 cm de ancho. La segunda foto muestra toda la línea Taupe y Wengue.",
+    meta: "Wengue · Alto 70,5 cm",
+    imagenes: ["img/armario-2-gabinete.jpg", "img/armario-2-linea.jpg"],
+    ficha: { "Largo": "65,0 cm — 25,6\"", "Ancho": "40,0 cm — 15,7\"", "Alto": "70,5 cm — 27,8\"", "Peso": "7,2 kg — 15,8 lb", "Color": "Wengue (8040)" },
+    caracteristicas: ["Dos puertas", "Entrepaño interior", "Textura tipo tejido"]
+  },
+
+  /* ---- Mesas ---- */
+  {
+    id: "mesa-escolar-hexagonal",
+    nombre: "Mesa escolar hexagonal (6 puestos)",
+    categoria: "Mobiliario",
+    descripcion: "Mesa hexagonal para 6 puestos, con juego de 6 sillas incluido.",
+    detalle: "Tablero dividido en 6 piezas de colores, ideal para trabajo en grupo. Incluye 6 sillas a juego. La segunda foto la muestra en uso, en azul.",
+    meta: "6 puestos · Incluye 6 sillas",
+    ajuste: "contain", fondo: "#f6f6f6",
+    imagenes: ["img/mesa-escolar-hexagonal-1.jpg", "img/mesa-escolar-hexagonal-2.jpg"],
+    ficha: { "Puestos": "6", "Sillas incluidas": "6" },
+    caracteristicas: ["Diseño hexagonal para trabajo en grupo", "Incluye 6 sillas a juego", "Disponible en varios colores"]
+  },
+
+  /* ---- Lockers ---- */
+  {
+    id: "locker-plastico-azul",
+    nombre: "Locker plástico modular azul",
+    categoria: "Mobiliario",
+    descripcion: "Locker plástico modular, con entrepaño adicional para separar los elementos guardados.",
+    detalle: "Cada módulo mide 45 cm y trae un entrepaño adicional para organizar mejor lo que se guarda. Los elementos dentro de cada módulo no deben superar los 20 kg en total. Los módulos se apilan y combinan, como se ve en la foto.",
+    meta: "Módulo de 45 cm · Máx. 20 kg",
+    imagenes: ["img/locker-plastico-azul-1.jpg"],
+    ficha: { "Ancho por módulo": "45 cm", "Entrepaño": "Uno adicional, incluido", "Capacidad máxima": "20 kg en total" },
+    caracteristicas: ["Entrepaño adicional para separar elementos", "Capacidad máxima de 20 kg", "Módulos apilables y combinables"]
+  },
+  {
+    id: "locker-metalico-9",
+    nombre: "Locker metálico 9 puestos",
+    categoria: "Mobiliario",
+    descripcion: "Locker metálico con 9 casilleros individuales, cada uno con su propia puerta.",
+    detalle: "Estructura metálica con 9 puertas independientes, cada una con manija. La segunda foto muestra el locker recién instalado.",
+    meta: "9 puestos · Metálico",
+    imagenes: ["img/locker-metalico-9-1.jpg", "img/locker-metalico-9-2.jpg"],
+    ficha: { "Puestos": "9", "Material": "Metálico" },
+    caracteristicas: ["9 casilleros individuales", "Puertas con manija propia", "Estructura metálica resistente"]
   },
 
   /* ============ JARDÍN INFANTIL (ejemplos: edítalos o bórralos) ============ */
@@ -736,6 +871,11 @@ function initTexts() {
   if (CONFIG.imagenHero) { $("#hero-img").src = CONFIG.imagenHero; $("#hero-img").alt = CONFIG.altHero || ""; }
   $("#cta-top").href = wa(CONFIG.mensajeGeneral);
   $("#cta-advice").href = wa(CONFIG.mensajeGeneral);
+  const flot = $("#wa-float");
+  flot.href = wa(CONFIG.mensajeGeneral);
+  flot.setAttribute("aria-label", CONFIG.textoBotonFlotante || "Escríbenos por WhatsApp");
+  $("#wa-float-label").textContent = CONFIG.textoBotonFlotante || "Escríbenos por WhatsApp";
+  flot.hidden = CONFIG.botonFlotante === false;
   $("#adv-title").textContent = CONFIG.asesoria.titulo;
   $("#adv-text").textContent = CONFIG.asesoria.texto;
   $("#adv-btn").textContent = CONFIG.asesoria.boton;
