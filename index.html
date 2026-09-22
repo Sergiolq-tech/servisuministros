@@ -1631,12 +1631,24 @@
           padding: 0.85em 1.1em;
           font-size: 13px;
         }
-        .hero {
-          height: 250px;
-          min-height: 250px;
+        
+        .hero__content {
+          display: none;
         }
+
+        .hero__scrim {
+          display: none;
+        }
+
+        .hero {
+          height: calc(100vw * 1021 / 755);
+          min-height: 0;
+          aspect-ratio: 755 / 1021;
+        }
+
         .hero__img {
-          object-position: 72% center;
+          object-position: center center;
+          object-fit: cover;
         }
         .hero__txt {
           padding: 10px 12px;
@@ -1819,16 +1831,23 @@
       Toda la composición visual (ondas, colores, extintores, slogan y marca)
       pertenece a una sola imagen para evitar cualquier unión entre montajes.
     -->
-        <img
-          class="hero__img"
-          id="hero-img"
-          src="./img/Fondo_hero.png"
-          alt="Servi Suministros JSG — Tu seguridad es nuestra misión. Seguridad, equipos y soluciones."
-          width="2048"
-          height="671"
-          fetchpriority="high"
-          decoding="async"
-        />
+        <picture>
+          <source
+            media="(max-width: 600px)"
+            srcset="./img/Fondo_hero_mobile.webp"
+          />
+
+          <img
+            class="hero__img"
+            id="hero-img"
+            src="./img/Fondo_hero.png"
+            alt="Servi Suministros JSG — Tu seguridad es nuestra misión. Seguridad, equipos y soluciones."
+            width="2048"
+            height="671"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </picture>
 
         <div class="hero__scrim" aria-hidden="true"></div>
 
@@ -2904,7 +2923,6 @@
         $("[data-hero-title]").textContent = CONFIG.tituloHero;
         $("[data-hero-sub]").textContent = CONFIG.subtituloHero;
         if (CONFIG.imagenHero) {
-          $("#hero-img").src = CONFIG.imagenHero;
           $("#hero-img").alt = CONFIG.altHero || "";
         }
         $("#cta-top").href = wa(CONFIG.mensajeGeneral);
@@ -3244,7 +3262,7 @@
           clearTimeout(timer);
         };
         setTimeout(() => alertBox.classList.add("is-open"), 600);
-        timer = setTimeout(close, 13000);
+        timer = setTimeout(close, 11000);
         $("#hero-alert-close").addEventListener("click", close);
       })();
 
