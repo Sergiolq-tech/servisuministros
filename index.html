@@ -588,6 +588,17 @@
         object-fit: cover;
         object-position: center center;
       }
+      /* Entre 601px y 1526px la altura del hero deja de coincidir siempre
+         con la proporción real de Fondo_hero.png (en el tramo de alto fijo
+         340/430px, y por redondeos en el resto). Usamos "contain" ahí para
+         que la imagen nunca se recorte; el navy de fondo del hero rellena
+         cualquier franja sobrante sin que se note. */
+      @media (max-width: 1526px) {
+        .hero__img {
+          object-fit: contain;
+          background: #073d83;
+        }
+      }
       .hero__scrim {
         display: none;
       }
@@ -632,6 +643,7 @@
       .hero__txt h1 {
         font: 800 clamp(22px, 2.6vw, 38px) / 1.12 var(--display);
         margin: 0 0 10px;
+        max-width: 580px;
       }
       .hero__txt p {
         font: 400 clamp(13px, 1.05vw, 15px) / 1.5 var(--body);
@@ -998,7 +1010,7 @@
       .modal {
         position: fixed;
         inset: 0;
-        z-index: 100;
+        z-index: 500;
         display: grid;
         place-items: center;
         padding: 20px;
@@ -1255,7 +1267,7 @@
    ============================================================ */
       .wa-float {
         position: fixed;
-        z-index: 60;
+        z-index: 400;
         right: calc(22px + env(safe-area-inset-right, 0px));
         bottom: calc(22px + env(safe-area-inset-bottom, 0px));
         width: 60px;
@@ -1373,233 +1385,137 @@
           object-position: center center;
         }
       }
-      @media (max-width: 920px) {
-        .footer__in {
-          grid-template-columns: 1fr;
-          gap: 28px;
-          padding-top: 34px;
+
+        @media (max-width: 920px) {
+          .footer__in {
+            grid-template-columns: 1fr;
+            gap: 28px;
+            padding-top: 34px;
+          }
+
+          .shell {
+            grid-template-columns: 1fr;
+            margin-top: 0;
+            padding-top: 20px;
+          }
+
+          .shell > main {
+            padding-top: 0;
+          }
+
+          /* ============================================================
+            SIDEBAR — conservar
+            ============================================================ */
+          .sidebar {
+            position: fixed;
+            z-index: 70;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: min(88vw, 340px);
+            background: var(--page);
+            padding: 16px;
+            overflow-y: auto;
+            transform: translateX(-105%);
+            transition: transform 0.28s ease;
+            box-shadow: var(--shadow-lg);
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          .sidebar.is-open {
+            transform: none;
+          }
+
+          .sidebar .advice {
+            display: none;
+          }
+
+          .mobile-advice {
+            display: block;
+            position: sticky;
+            bottom: 0;
+            margin: 14px -16px -16px;
+            padding: 12px 16px;
+            background: var(--page);
+            border-top: 1px solid var(--line);
+            z-index: 2;
+          }
+
+          .filter-drawer-close {
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: #fff;
+            color: var(--ink);
+            cursor: pointer;
+            flex: none;
+          }
+
+          .filter-drawer-close:hover {
+            background: #f7f5fb;
+          }
+
+          .filter-drawer-close:focus-visible {
+            outline: 3px solid rgba(122, 75, 232, 0.25);
+            outline-offset: 2px;
+          }
+
+          .drawer-bg {
+            display: block;
+            position: fixed;
+            inset: 0;
+            z-index: 65;
+            background: rgba(21, 16, 45, 0.55);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+          }
+
+          .drawer-bg.is-on {
+            opacity: 1;
+            pointer-events: auto;
+          }
+
+          .filter-toggle {
+            display: inline-flex;
+          }
+
+          /* ============================================================
+            MODAL — conservar
+            ============================================================ */
+          .modal {
+            padding: 0;
+            align-items: end;
+          }
+
+          .modal__panel {
+            grid-template-columns: 1fr;
+            max-height: 94vh;
+            border-radius: 24px 24px 0 0;
+            overflow-y: auto;
+          }
+
+          .gallery {
+            padding: 14px;
+          }
+
+          .stage {
+            min-height: 0;
+            flex: none;
+            aspect-ratio: 4/3;
+          }
+
+          .info {
+            overflow: visible;
+            padding: 22px 20px 26px;
+          }
         }
-        .shell {
-          grid-template-columns: 1fr;
-          margin-top: 0;
-          padding-top: 20px;
-        }
-        .shell > main {
-          padding-top: 0;
-        }
-        .hero {
-          height: 340px;
-          min-height: 340px;
-        }
-        .hero__in {
-          padding: 0;
-        }
-        .hero__content {
-          grid-template-columns: 1fr;
-          padding: 0 16px;
-        }
-        .hero__txt {
-          grid-column: 1;
-          max-width: 100%;
-          width: auto;
-          padding: 14px 16px;
-          border-radius: 14px;
-        }
-        .hero__txt h1 {
-          font-size: 19px;
-        }
-        .hero__txt p {
-          font-size: 12px;
-          max-width: 100%;
-        }
-        .hero__cols {
-          display: none;
-        }
-        .hero__img {
-          object-position: center center;
-        }
-        .hero-alert {
-          display: block;
-          position: fixed;
-          left: 12px;
-          right: 12px;
-          bottom: 70px;
-          z-index: 80;
-          background: #fff;
-          border-radius: 16px;
-          box-shadow: var(--shadow-lg);
-          border: 1px solid var(--line);
-          padding: 16px 16px 14px;
-          transform: translateY(130%);
-          opacity: 0;
-          transition:
-            transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.1),
-            opacity 0.32s;
-          pointer-events: none;
-        }
-        .hero-alert.is-open {
-          transform: translateY(0);
-          opacity: 1;
-          pointer-events: auto;
-        }
-        .hero-alert__close {
-          position: absolute;
-          top: 8px;
-          right: 8px;
-          width: 30px;
-          height: 30px;
-          border-radius: 999px;
-          border: 1px solid var(--line);
-          background: #fff;
-          display: grid;
-          place-items: center;
-          cursor: pointer;
-          color: var(--ink);
-        }
-        .hero-alert__close svg {
-          width: 14px;
-          height: 14px;
-        }
-        .hero-alert__title {
-          font: 700 13.5px/1.2 var(--display);
-          color: var(--ink);
-          margin: 0 0 12px;
-          padding-right: 34px;
-        }
-        .hero-alert__list {
-          display: grid;
-          gap: 11px;
-        }
-        .hero-alert__item {
-          display: flex;
-          gap: 10px;
-          align-items: flex-start;
-        }
-        .hero-alert__item .ico {
-          width: 28px;
-          height: 28px;
-          border-radius: 999px;
-          display: grid;
-          place-items: center;
-          flex: none;
-          color: #fff;
-        }
-        .hero-alert__item .ico svg {
-          width: 16px;
-          height: 16px;
-          fill: none;
-          stroke: currentColor;
-          stroke-width: 2;
-          stroke-linecap: round;
-          stroke-linejoin: round;
-        }
-        .hero-alert__item .ico.orange {
-          background: var(--orange, #f7941d);
-        }
-        .hero-alert__item .ico.red {
-          background: #e0392b;
-        }
-        .hero-alert__item b {
-          display: block;
-          font: 700 12px/1.25 var(--display);
-          color: var(--ink);
-        }
-        .hero-alert__item > span:not(.ico) {
-          display: block;
-          font: 400 11.5px/1.35 var(--body);
-          color: var(--muted);
-        }
-        .sidebar {
-          position: fixed;
-          z-index: 70;
-          left: 0;
-          top: 0;
-          bottom: 0;
-          width: min(88vw, 340px);
-          background: var(--page);
-          padding: 16px;
-          overflow-y: auto;
-          transform: translateX(-105%);
-          transition: transform 0.28s ease;
-          box-shadow: var(--shadow-lg);
-          overscroll-behavior: contain;
-          -webkit-overflow-scrolling: touch;
-        }
-        .sidebar.is-open {
-          transform: none;
-        }
-        .sidebar .advice {
-          display: none;
-        }
-        .mobile-advice {
-          display: block;
-          position: sticky;
-          bottom: 0;
-          margin: 14px -16px -16px;
-          padding: 12px 16px;
-          background: var(--page);
-          border-top: 1px solid var(--line);
-          z-index: 2;
-        }
-        .filter-drawer-close {
-          display: grid;
-          place-items: center;
-          width: 38px;
-          height: 38px;
-          border: 1px solid var(--line);
-          border-radius: 12px;
-          background: #fff;
-          color: var(--ink);
-          cursor: pointer;
-          flex: none;
-        }
-        .filter-drawer-close:hover {
-          background: #f7f5fb;
-        }
-        .filter-drawer-close:focus-visible {
-          outline: 3px solid rgba(122, 75, 232, 0.25);
-          outline-offset: 2px;
-        }
-        .drawer-bg {
-          display: block;
-          position: fixed;
-          inset: 0;
-          z-index: 65;
-          background: rgba(21, 16, 45, 0.55);
-          opacity: 0;
-          pointer-events: none;
-          transition: opacity 0.2s;
-        }
-        .drawer-bg.is-on {
-          opacity: 1;
-          pointer-events: auto;
-        }
-        .filter-toggle {
-          display: inline-flex;
-        }
-        .modal {
-          padding: 0;
-          align-items: end;
-        }
-        .modal__panel {
-          grid-template-columns: 1fr;
-          max-height: 94vh;
-          border-radius: 24px 24px 0 0;
-          overflow-y: auto;
-        }
-        .gallery {
-          padding: 14px;
-        }
-        .stage {
-          min-height: 0;
-          flex: none;
-          aspect-ratio: 4/3;
-        }
-        .info {
-          overflow: visible;
-          padding: 22px 20px 26px;
-        }
-      }
+
+
       @media (max-width: 600px) {
         .grid {
           grid-template-columns: 1fr;
@@ -1648,7 +1564,6 @@
 
         .hero__img {
           object-position: center center;
-          object-fit: cover;
         }
         .hero__txt {
           padding: 10px 12px;
@@ -1665,7 +1580,428 @@
           text-align: center;
           margin: 0;
         }
+
+        /* ============================================================
+          AVISO "Extintores: lo que debes saber" — solo celular.
+          A partir de 601px esta información ya va siempre visible
+          dentro del propio hero (ver bloque tablet más abajo), así
+          que aquí no compite con el botón de WhatsApp.
+          ============================================================ */
+        .hero-alert {
+          display: block;
+          position: fixed;
+          left: 12px;
+          right: 12px;
+          bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+          z-index: 80;
+          background: #fff;
+          border-radius: 16px;
+          box-shadow: var(--shadow-lg);
+          border: 1px solid var(--line);
+          padding: 16px 16px 14px;
+          transform: translateY(130%);
+          opacity: 0;
+          transition:
+            transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.1),
+            opacity 0.32s;
+          pointer-events: none;
+        }
+
+        .hero-alert.is-open {
+          transform: translateY(0);
+          opacity: 1;
+          pointer-events: auto;
+        }
+
+        .hero-alert__close {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          width: 30px;
+          height: 30px;
+          border-radius: 999px;
+          border: 1px solid var(--line);
+          background: #fff;
+          display: grid;
+          place-items: center;
+          cursor: pointer;
+          color: var(--ink);
+        }
+
+        .hero-alert__close svg {
+          width: 14px;
+          height: 14px;
+        }
+
+        .hero-alert__title {
+          font: 700 13.5px/1.2 var(--display);
+          color: var(--ink);
+          margin: 0 0 12px;
+          padding-right: 34px;
+        }
+
+        .hero-alert__list {
+          display: grid;
+          gap: 11px;
+        }
+
+        .hero-alert__item {
+          display: flex;
+          gap: 10px;
+          align-items: flex-start;
+        }
+
+        .hero-alert__item .ico {
+          width: 28px;
+          height: 28px;
+          border-radius: 999px;
+          display: grid;
+          place-items: center;
+          flex: none;
+          color: #fff;
+        }
+
+        .hero-alert__item .ico svg {
+          width: 16px;
+          height: 16px;
+          fill: none;
+          stroke: currentColor;
+          stroke-width: 2;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        .hero-alert__item .ico.orange {
+          background: var(--orange, #f7941d);
+        }
+
+        .hero-alert__item .ico.red {
+          background: #e0392b;
+        }
+
+        .hero-alert__item b {
+          display: block;
+          font: 700 12px/1.25 var(--display);
+          color: var(--ink);
+        }
+
+        .hero-alert__item > span:not(.ico) {
+          display: block;
+          font: 400 11.5px/1.35 var(--body);
+          color: var(--muted);
+        }
       }
+
+/* ============================================================
+   TABLET VERTICAL Y HORIZONTAL — 601px a 1366px
+   (iPad mini, iPad Pro, Android tablets, laptops pequeñas)
+
+   Sigue siendo UNA sola imagen (Fondo_hero.png) con el texto
+   superpuesto, igual que en desktop — no dos piezas separadas.
+   Lo que cambia es cómo se recorta la foto con object-fit:cover:
+   el ancla queda en el lado derecho, así que si el hero necesita
+   más alto para el texto, el recorte "roba" únicamente el
+   remolino azul del lado izquierdo (puro fondo decorativo) y
+   jamás la esquina donde están los extintores. La caja de texto,
+   además, tiene un max-width en % que la detiene antes de llegar
+   a esa esquina, sin importar el tamaño exacto de la tablet.
+   ============================================================ */
+@media (min-width: 601px) and (max-width: 1366px) {
+  /* El resto del layout (la tarjeta del sidebar que se monta sobre
+     el borde inferior del hero, el padding del contenido, etc.)
+     se calcula a partir de esta misma variable — si solo cambiamos
+     el alto del .hero sin tocarla, el sidebar queda desalineado y
+     tapa el texto. Actualizándola aquí, todo se recalcula solo. */
+  :root {
+    /* Subí el mínimo de 300 a 320px: con las columnas apiladas en
+       vertical el bloque de texto necesita un poco más de alto para
+       no rozar el borde inferior del hero en los anchos más chicos
+       de este rango (768px). */
+    --hero-h: clamp(320px, 39vw, 460px);
+  }
+
+  /* Antes esta regla forzaba "cover" y pisaba el "contain" definido arriba
+     (@media max-width:1526px), que es el que de verdad evita que la imagen
+     se recorte sobre los extintores. La quitamos: en este rango se hereda
+     el "contain" y la imagen se ve completa siempre, con el navy de fondo
+     rellenando la franja sobrante arriba/abajo. */
+
+  .hero__content {
+    padding: 0 clamp(18px, 3.2vw, 30px);
+    align-items: flex-start;
+    padding-top: clamp(18px, 4.2vw, 34px);
+  }
+
+  .hero__txt {
+    width: auto;
+  }
+
+  .hero__txt .chip {
+    padding: 7px 14px;
+    margin-bottom: clamp(8px, 1.4vw, 12px);
+    font-size: clamp(11px, 1.05vw, 13px);
+  }
+
+  .hero__txt h1 {
+    max-width: 100%;
+    font-size: clamp(19px, 2.5vw, 29px);
+    line-height: 1.16;
+    margin-bottom: clamp(6px, 1vw, 9px);
+  }
+
+  .hero__txt p {
+    max-width: 100%;
+    font-size: clamp(12px, 1.15vw, 13.5px);
+    line-height: 1.42;
+  }
+
+  /* En tablet no cabe 1 sola fila con las 3 columnas: se apilan en
+     vertical (icono + texto por fila) en vez de envolver a mitad de
+     columna, que era lo que se veía "desordenado". */
+  .hero__cols {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: clamp(5px, 0.9vw, 8px);
+    margin-top: clamp(8px, 1.4vw, 14px);
+  }
+
+  .hero__col {
+    padding: 0;
+    border-left: 0;
+  }
+
+  .hero__col .ico {
+    width: clamp(20px, 1.7vw, 24px);
+    height: clamp(20px, 1.7vw, 24px);
+  }
+
+  .hero__col span {
+    max-width: none;
+    font-size: clamp(9px, 0.85vw, 10.5px);
+  }
+
+  .hero__col b {
+    font-size: clamp(10px, 0.95vw, 11.5px);
+  }
+}
+
+/* 601–920: todavía no hay sidebar fija (es un cajón que se abre con el
+   botón "Filtros"), así que el hero usa el ancho completo para el texto. */
+@media (min-width: 601px) and (max-width: 920px) {
+  .hero__content {
+    grid-template-columns: 1fr;
+  }
+
+  .hero__txt {
+    grid-column: 1;
+    max-width: min(480px, 62%);
+  }
+}
+
+/* 921–1366: aquí sí hay sidebar fija a la izquierda. El hero comparte
+   la misma rejilla que el resto de la página (columna reservada del
+   ancho del sidebar + columna de contenido) para que el texto nazca
+   siempre a la derecha del sidebar, nunca debajo. */
+@media (min-width: 921px) and (max-width: 1366px) {
+  .hero__txt {
+    max-width: min(460px, 78%);
+  }
+}
+
+/* ============================================================
+   HERO TABLET VERTICAL — imagen propia por tramo
+   (768×1024 / 960×1440 / 1032×1376)
+
+   Estas 3 imágenes ya traen el texto, los sellos y el logo
+   "quemados" en el propio diseño (igual que Fondo_hero_mobile.webp
+   en celular). Por eso, solo en orientación vertical, el hero deja
+   de mezclar Fondo_hero.png con el texto en HTML por encima —esa
+   mezcla era la que generaba el conflicto entre la imagen y la
+   organización del texto en tablets. El hero horizontal (landscape)
+   no se toca: sigue usando Fondo_hero.png y el texto en HTML tal
+   como estaba.
+
+   --hero-h se recalcula por tramo (igual que ya se hace arriba)
+   para que el resto del layout que depende de esa variable
+   (tarjeta del sidebar montada sobre el hero, padding del main)
+   se acomode solo, sin tocar esas reglas.
+   ============================================================ */
+@media (min-width: 601px) and (max-width: 1366px) and (orientation: portrait) {
+  .hero__content {
+    display: none;
+  }
+
+  .hero__img {
+    object-fit: cover;
+    object-position: center top;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 864px) and (orientation: portrait) {
+  :root {
+    --hero-h: calc(100vw * 1024 / 768);
+  }
+}
+
+@media (min-width: 865px) and (max-width: 996px) and (orientation: portrait) {
+  :root {
+    --hero-h: calc(100vw * 1440 / 960);
+  }
+}
+
+@media (min-width: 997px) and (max-width: 1366px) and (orientation: portrait) {
+  :root {
+    --hero-h: calc(100vw * 1376 / 1032);
+  }
+}
+
+/* ============================================================
+   TABLET VERTICAL 921–1366 — filtros en cajón, no en columna fija
+   Con estas imágenes el hero pasa a ser mucho más alto. La tarjeta
+   de filtros ya no puede seguir montada como columna fija sobre el
+   borde del hero (quedaba flotando arriba, encimada, con un hueco
+   vacío debajo). A partir de 921px, en vertical, el panel de
+   filtros pasa a comportarse exactamente igual que en celular:
+   vive en un cajón que se abre con el botón "Filtros" y aparece
+   como overlay encima del contenido. Es el mismo patrón que ya
+   usa el bloque ≤920px, solo extendido a este rango.
+   ============================================================ */
+@media (min-width: 921px) and (max-width: 1366px) and (orientation: portrait) {
+  .shell {
+    grid-template-columns: 1fr;
+    margin-top: 0;
+    padding-top: 20px;
+  }
+
+  .shell > main {
+    padding-top: 0;
+  }
+
+  .sidebar {
+    position: fixed;
+    z-index: 70;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: min(88vw, 340px);
+    background: var(--page);
+    padding: 16px;
+    overflow-y: auto;
+    transform: translateX(-105%);
+    transition: transform 0.28s ease;
+    box-shadow: var(--shadow-lg);
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar.is-open {
+    transform: none;
+  }
+
+  .sidebar .advice {
+    display: none;
+  }
+
+  .mobile-advice {
+    display: block;
+    position: sticky;
+    bottom: 0;
+    margin: 14px -16px -16px;
+    padding: 12px 16px;
+    background: var(--page);
+    border-top: 1px solid var(--line);
+    z-index: 2;
+  }
+
+  .filter-drawer-close {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    flex: none;
+  }
+
+  .filter-drawer-close:hover {
+    background: #f7f5fb;
+  }
+
+  .filter-drawer-close:focus-visible {
+    outline: 3px solid rgba(122, 75, 232, 0.25);
+    outline-offset: 2px;
+  }
+
+  .drawer-bg {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 65;
+    background: rgba(21, 16, 45, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .drawer-bg.is-on {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .filter-toggle {
+    display: inline-flex;
+  }
+
+  /* Sin la columna fija del sidebar sobra ancho para 3 miniaturas
+     por fila en vez de 2. */
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 601px) and (max-width: 920px) {
+
+  /* WHATSAPP FLOTANTE */
+  .wa-float:not([hidden]) {
+    display: grid;
+    position: fixed;
+    z-index: 400;
+    right: calc(22px + env(safe-area-inset-right, 0px));
+    bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+    width: 60px;
+    height: 60px;
+  }
+
+  /* MODAL */
+  .modal:not([hidden]) {
+    display: grid;
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    width: 100%;
+    height: 100%;
+  }
+
+  .modal:not([hidden]) .modal__bg {
+    position: absolute;
+    inset: 0;
+  }
+
+  .modal:not([hidden]) .modal__panel {
+    position: relative;
+    z-index: 1;
+    width: min(1060px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+    max-height: 94vh;
+    overflow-y: auto;
+    grid-template-columns: 1fr;
+    border-radius: 24px 24px 0 0;
+  }
+}
+
       @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -1837,6 +2173,21 @@
             srcset="./img/Fondo_hero_mobile.webp"
           />
 
+          <!-- Tablets en vertical (601–1366px, orientation: portrait):
+               imagen propia por tramo, ya no depende de Fondo_hero.png -->
+          <source
+            media="(min-width: 601px) and (max-width: 864px) and (orientation: portrait)"
+            srcset="./img/hero_tablet_768x1024.png"
+          />
+          <source
+            media="(min-width: 865px) and (max-width: 996px) and (orientation: portrait)"
+            srcset="./img/hero_tablet_960x1440.png"
+          />
+          <source
+            media="(min-width: 997px) and (max-width: 1366px) and (orientation: portrait)"
+            srcset="./img/hero_tablet_1032x1376.png"
+          />
+
           <img
             class="hero__img"
             id="hero-img"
@@ -1855,8 +2206,8 @@
           <div class="hero__txt">
             <span class="chip">Servi Suministros JSG</span>
             <h1 id="hero-title" data-hero-title>
-              Extintores permitidos en Colombia
-            </h1>
+                Protección contra incendios para tu institución
+              </h1>
             <p data-hero-sub>
               Protección real para lo que más importa. Comercializamos y
               recargamos extintores certificados según la norma NTC 2885 y la
@@ -2179,12 +2530,12 @@
         /* ---- CABECERA Y PORTADA ---- */
         textoBotonCabecera: "Solicita tu cotización", // botón morado de arriba a la derecha
         textoBotonCabeceraCorto: "Cotizar", // el mismo botón, en celular
-        tituloHero: "Extintores permitidos en Colombia",
+        tituloHero: "Protección contra incendios para tu institución",
         subtituloHero:
           "Protección real para lo que más importa. Comercializamos y recargamos extintores certificados según la norma NTC 2885 y la Resolución 0312 de 2019 (SST).",
         imagenHero: "./img/Fondo_hero.png", // composición final completa del hero (fondo/decoración)
         altHero:
-          "Servi Suministros JSG — Extintores permitidos en Colombia. Tu seguridad es nuestra misión.",
+          "Servi Suministros JSG — Protección contra incendios para tu institución. Tu seguridad es nuestra misión.",
 
         /* ---- WHATSAPP ---- */
         // Código de país + número, SIN + ni espacios (Colombia = 57). Lo usan TODOS los botones.
@@ -2372,6 +2723,73 @@
           ],
         },
 
+        /* ---- Mesas ---- */
+        {
+          id: "mesa-escolar-hexagonal",
+          nombre: "Mesa escolar hexagonal (6 puestos)",
+          categoria: "Mobiliario",
+          descripcion:
+            "Mesa hexagonal para 6 puestos, con juego de 6 sillas incluido.",
+          detalle:
+            "Tablero dividido en 6 piezas de colores, ideal para trabajo en grupo. Incluye 6 sillas a juego. La segunda foto la muestra en uso, en azul.",
+          meta: "6 puestos · Incluye 6 sillas",
+          ajuste: "contain",
+          fondo: "#f6f6f6",
+          imagenes: [
+            "img/mesa-escolar-hexagonal-1.jpg",
+            "img/mesa-escolar-hexagonal-2.jpg",
+          ],
+          ficha: { Puestos: "6", "Sillas incluidas": "6" },
+          caracteristicas: [
+            "Diseño hexagonal para trabajo en grupo",
+            "Incluye 6 sillas a juego",
+            "Disponible en varios colores",
+          ],
+        },
+
+        /* ---- Lockers ---- */
+        {
+          id: "locker-plastico-azul",
+          nombre: "Locker plástico modular azul",
+          categoria: "Mobiliario",
+          descripcion:
+            "Locker plástico modular, con entrepaño adicional para separar los elementos guardados.",
+          detalle:
+            "Cada módulo mide 45 cm y trae un entrepaño adicional para organizar mejor lo que se guarda. Los elementos dentro de cada módulo no deben superar los 20 kg en total. Los módulos se apilan y combinan, como se ve en la foto.",
+          meta: "Módulo de 45 cm · Máx. 20 kg",
+          imagenes: ["img/locker-plastico-azul-1.jpg"],
+          ficha: {
+            "Ancho por módulo": "45 cm",
+            Entrepaño: "Uno adicional, incluido",
+            "Capacidad máxima": "20 kg en total",
+          },
+          caracteristicas: [
+            "Entrepaño adicional para separar elementos",
+            "Capacidad máxima de 20 kg",
+            "Módulos apilables y combinables",
+          ],
+        },
+        {
+          id: "locker-metalico-9",
+          nombre: "Locker metálico 9 puestos",
+          categoria: "Mobiliario",
+          descripcion:
+            "Locker metálico con 9 casilleros individuales, cada uno con su propia puerta.",
+          detalle:
+            "Estructura metálica con 9 puertas independientes, cada una con manija. La segunda foto muestra el locker recién instalado.",
+          meta: "9 puestos · Metálico",
+          imagenes: [
+            "img/locker-metalico-9-1.jpg",
+            "img/locker-metalico-9-2.jpg",
+          ],
+          ficha: { Puestos: "9", Material: "Metálico" },
+          caracteristicas: [
+            "9 casilleros individuales",
+            "Puertas con manija propia",
+            "Estructura metálica resistente",
+          ],
+        },
+
         /* ---- Armarios · línea 1 (gris) ---- */
         {
           id: "armario-grande-gris",
@@ -2504,73 +2922,6 @@
             "Dos puertas",
             "Entrepaño interior",
             "Textura tipo tejido",
-          ],
-        },
-
-        /* ---- Mesas ---- */
-        {
-          id: "mesa-escolar-hexagonal",
-          nombre: "Mesa escolar hexagonal (6 puestos)",
-          categoria: "Mobiliario",
-          descripcion:
-            "Mesa hexagonal para 6 puestos, con juego de 6 sillas incluido.",
-          detalle:
-            "Tablero dividido en 6 piezas de colores, ideal para trabajo en grupo. Incluye 6 sillas a juego. La segunda foto la muestra en uso, en azul.",
-          meta: "6 puestos · Incluye 6 sillas",
-          ajuste: "contain",
-          fondo: "#f6f6f6",
-          imagenes: [
-            "img/mesa-escolar-hexagonal-1.jpg",
-            "img/mesa-escolar-hexagonal-2.jpg",
-          ],
-          ficha: { Puestos: "6", "Sillas incluidas": "6" },
-          caracteristicas: [
-            "Diseño hexagonal para trabajo en grupo",
-            "Incluye 6 sillas a juego",
-            "Disponible en varios colores",
-          ],
-        },
-
-        /* ---- Lockers ---- */
-        {
-          id: "locker-plastico-azul",
-          nombre: "Locker plástico modular azul",
-          categoria: "Mobiliario",
-          descripcion:
-            "Locker plástico modular, con entrepaño adicional para separar los elementos guardados.",
-          detalle:
-            "Cada módulo mide 45 cm y trae un entrepaño adicional para organizar mejor lo que se guarda. Los elementos dentro de cada módulo no deben superar los 20 kg en total. Los módulos se apilan y combinan, como se ve en la foto.",
-          meta: "Módulo de 45 cm · Máx. 20 kg",
-          imagenes: ["img/locker-plastico-azul-1.jpg"],
-          ficha: {
-            "Ancho por módulo": "45 cm",
-            Entrepaño: "Uno adicional, incluido",
-            "Capacidad máxima": "20 kg en total",
-          },
-          caracteristicas: [
-            "Entrepaño adicional para separar elementos",
-            "Capacidad máxima de 20 kg",
-            "Módulos apilables y combinables",
-          ],
-        },
-        {
-          id: "locker-metalico-9",
-          nombre: "Locker metálico 9 puestos",
-          categoria: "Mobiliario",
-          descripcion:
-            "Locker metálico con 9 casilleros individuales, cada uno con su propia puerta.",
-          detalle:
-            "Estructura metálica con 9 puertas independientes, cada una con manija. La segunda foto muestra el locker recién instalado.",
-          meta: "9 puestos · Metálico",
-          imagenes: [
-            "img/locker-metalico-9-1.jpg",
-            "img/locker-metalico-9-2.jpg",
-          ],
-          ficha: { Puestos: "9", Material: "Metálico" },
-          caracteristicas: [
-            "9 casilleros individuales",
-            "Puertas con manija propia",
-            "Estructura metálica resistente",
           ],
         },
 
@@ -3228,33 +3579,38 @@
         if (e.target.closest("[data-clear]")) limpiar();
       });
 
-      /* ---------- Filtros en móvil (cajón) ---------- */
+      /* ---------- Filtros en cajón (móvil y tablet vertical 921–1366) ---------- */
       const sidebar = $("#sidebar"),
         drawerBg = $("#drawer-bg"),
         drawerClose = $("#btn-filters-close");
+      const isDrawerMode = () =>
+        window.matchMedia("(max-width: 920px)").matches ||
+        window.matchMedia(
+          "(min-width: 921px) and (max-width: 1366px) and (orientation: portrait)",
+        ).matches;
       function drawer(open) {
         sidebar.classList.toggle("is-open", open);
         drawerBg.classList.toggle("is-on", open);
-        document.body.classList.toggle(
-          "no-scroll",
-          open && window.matchMedia("(max-width: 920px)").matches,
-        );
+        document.body.classList.toggle("no-scroll", open && isDrawerMode());
         if (open) drawerClose.focus({ preventScroll: true });
       }
       $("#btn-filters").addEventListener("click", () => drawer(true));
       drawerClose.addEventListener("click", () => drawer(false));
       drawerBg.addEventListener("click", () => drawer(false));
       window.addEventListener("resize", () => {
-        if (window.innerWidth > 920) drawer(false);
+        if (!isDrawerMode()) drawer(false);
+      });
+      window.addEventListener("orientationchange", () => {
+        if (!isDrawerMode()) drawer(false);
       });
 
-      /* ---------- Popup mobile: 4 advertencias (solo aparece ≤920px) ---------- */
+      /* ---------- Popup mobile: 4 advertencias (solo aparece ≤600px) ---------- */
       (() => {
         const alertBox = $("#hero-alert");
         if (!alertBox) return;
         const KEY = "heroAlertClosed";
         /*if (sessionStorage.getItem(KEY)) return; */
-        if (!window.matchMedia("(max-width: 920px)").matches) return;
+        if (!window.matchMedia("(max-width: 600px)").matches) return;
         let timer;
         const close = () => {
           alertBox.classList.remove("is-open");
