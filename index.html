@@ -708,6 +708,119 @@
         display: none;
       }
 
+      /* ---------- Más soluciones (transición hero → catálogo) ----------
+   Sección puente, deliberadamente más sobria que el hero: mismo ancho de
+   contenedor que el resto de la página (1280px), no toca el grid del
+   .shell ni el de la sidebar, así que no puede desalinear nada de lo
+   que ya existe debajo. Mobile-first: 2 columnas de "pills" hasta
+   600px, 4 en línea desde 601px en adelante (mismo corte que usa el
+   resto del sitio para mobile/tablet). */
+      .solutions {
+        background: var(--violet-50);
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        margin-bottom: 24px;
+      }
+      .solutions__in {
+        margin: 0 auto;
+        padding: clamp(24px, 3vw, 36px) 20px;
+        text-align: center;
+      }
+      .solutions h2 {
+        font: 700 clamp(1.25rem, 2.4vw, 1.8rem) / 1.25 var(--display);
+        color: var(--ink);
+        letter-spacing: -0.01em;
+        margin: 0 0 10px;
+      }
+      .solutions p {
+        max-width: 62em;
+        margin: 0 auto clamp(20px, 3vw, 28px);
+        color: var(--muted);
+        font: 400 clamp(13.5px, 1.1vw, 15px) / 1.6 var(--body);
+      }
+      .solutions__pills {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        max-width: 860px;
+        margin: 0 auto;
+      }
+      .solutions__pill {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 16px 10px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--r-md);
+        color: var(--ink);
+        font: 600 13.5px/1.2 var(--display);
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        -webkit-appearance: none;
+        appearance: none;
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease,
+          border-color 0.15s ease;
+      }
+      .solutions__pill:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+        border-color: var(--violet);
+      }
+      .solutions__pill:focus-visible {
+        outline: 2px solid var(--violet);
+        outline-offset: 2px;
+      }
+      .solutions__pill .ico {
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        flex: none;
+        color: #fff;
+      }
+      .solutions__pill .ico svg {
+        width: 56%;
+        height: 56%;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .solutions__pill[data-tint="violet"] .ico {
+        background: var(--violet);
+      }
+      .solutions__pill[data-tint="orange"] .ico {
+        background: var(--orange);
+      }
+      .solutions__pill[data-tint="coral"] .ico {
+        background: var(--coral);
+      }
+      .solutions__pill[data-tint="green"] .ico {
+        background: var(--green);
+      }
+      @media (min-width: 601px) {
+        .solutions__pills {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 14px;
+        }
+        .solutions__pill {
+          padding: 18px 12px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .solutions__pill {
+          transition: none;
+        }
+      }
+
       /* ---------- Toolbar ---------- */
       .catalog {
         margin-top: 0;
@@ -1067,6 +1180,110 @@
       .modal__close:hover {
         background: var(--violet-50);
       }
+
+      /* ---------- Aviso "Página en construcción" ----------
+   Clases independientes del modal de producto de arriba (no reutiliza
+   .modal__panel ni su grid de 2 columnas), para no afectar la galería. */
+      .wip-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 600;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+      }
+      .wip-modal[hidden] {
+        display: none;
+      }
+      .wip-modal__bg {
+        position: absolute;
+        inset: 0;
+        background: rgba(21, 16, 45, 0.72);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      .wip-modal__panel {
+        position: relative;
+        width: min(420px, 100%);
+        background: #fff;
+        border-radius: 26px;
+        box-shadow: var(--shadow-lg);
+        padding: 42px 28px 34px;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(18px) scale(0.97);
+        transition:
+          opacity 0.22s,
+          transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+      }
+      .wip-modal.is-open .wip-modal__bg {
+        opacity: 1;
+      }
+      .wip-modal.is-open .wip-modal__panel {
+        opacity: 1;
+        transform: none;
+      }
+      .wip-modal__close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1px solid var(--line);
+        display: grid;
+        place-items: center;
+        box-shadow: var(--shadow-sm);
+      }
+      .wip-modal__close:hover {
+        background: var(--violet-50);
+      }
+      .wip-modal__icon {
+        width: 76px;
+        height: 76px;
+        margin: 0 auto 18px;
+        border-radius: 999px;
+        background: var(--orange);
+        display: grid;
+        place-items: center;
+        color: #fff;
+      }
+      .wip-modal__icon .i {
+        width: 38px;
+        height: 38px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .wip-modal__kicker {
+        margin: 0 0 6px;
+        font: 700 12px/1.2 var(--display);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--violet);
+      }
+      .wip-modal__panel h2 {
+        font: 700 clamp(1.1rem, 2vw, 1.4rem) / 1.25 var(--display);
+        color: var(--ink);
+        margin: 0 0 10px;
+        letter-spacing: -0.01em;
+      }
+      .wip-modal__text {
+        margin: 0;
+        color: var(--muted);
+        font: 400 14px/1.6 var(--body);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .wip-modal__panel {
+          transition: none;
+        }
+      }
+
       .gallery {
         background: linear-gradient(180deg, #eeeafc, #f9f7ff);
         padding: 18px;
@@ -2122,6 +2339,11 @@
         <path d="M12 3 2 21h20L12 3Z" />
         <path d="M12 10v4M12 17h.01" />
       </symbol>
+      <symbol id="i-construction" viewBox="0 0 24 24">
+        <path d="M12 3 8 21h8L12 3Z" />
+        <path d="M9.6 14.5h4.8M10.6 10.2h2.8" />
+        <path d="M5 21h14" />
+      </symbol>
     </svg>
 
     <noscript
@@ -2388,6 +2610,28 @@
 
       <!-- ---------- Principal ---------- -->
       <main>
+        <!-- ---------- Más soluciones (puente entre el hero y el catálogo) ----------
+         Vive dentro de la columna principal (a la derecha del sidebar de
+         filtros), no como franja de ancho completo: así nunca puede quedar
+         tapada por el panel flotante de filtros. Los textos y las 4 "pills"
+         se generan desde CONFIG.soluciones (ver bloque ✏️ en el <script>),
+         igual que el resto del contenido editable de la página. -->
+        <section
+          class="solutions"
+          id="soluciones"
+          aria-labelledby="solutions-title"
+        >
+          <div class="solutions__in">
+            <h2 id="solutions-title"></h2>
+            <p id="solutions-text"></p>
+            <nav
+              class="solutions__pills"
+              id="solutions-pills"
+              aria-label="Familias de productos"
+            ></nav>
+          </div>
+        </section>
+
         <section class="catalog" id="catalogo" aria-label="Catálogo">
           <div class="toolbar">
             <p class="count" id="count" aria-live="polite"></p>
@@ -2494,6 +2738,38 @@
         <div class="info" id="m-info"></div>
       </div>
     </div>
+    <!-- ============================ AVISO "PÁGINA EN CONSTRUCCIÓN" ============================
+     Modal propio e independiente del modal de producto (#modal) de arriba:
+     usa sus propias clases (wip-modal / wip-modal__*) para no heredar ni
+     alterar los estilos de la galería de productos. -->
+    <div class="wip-modal" id="wip-modal" hidden>
+      <div class="wip-modal__bg" data-wip-close></div>
+      <div
+        class="wip-modal__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="wip-title"
+      >
+        <button
+          class="wip-modal__close"
+          id="wip-close"
+          type="button"
+          data-wip-close
+          aria-label="Cerrar"
+        >
+          <svg class="i" aria-hidden="true"><use href="#i-x" /></svg>
+        </button>
+        <div class="wip-modal__icon">
+          <svg class="i" aria-hidden="true"><use href="#i-construction" /></svg>
+        </div>
+        <p class="wip-modal__kicker" id="wip-kicker" hidden></p>
+        <h2 id="wip-title">Página en construcción</h2>
+        <p class="wip-modal__text">
+          Estamos preparando esta sección. Muy pronto encontrarás aquí toda
+          la información.
+        </p>
+      </div>
+    </div>
     <!-- ============================ WHATSAPP FLOTANTE ============================ -->
     <a
       class="wa-float"
@@ -2579,6 +2855,61 @@
             texto: "En todo el país",
           },
         ],
+
+        /* ---- SECCIÓN "MÁS SOLUCIONES" (puente entre el hero y el catálogo) ----
+     icono: shield | layers | ruler | smile | spark | tool | users (ver <symbol id="i-..."> en el <svg> del inicio del body)
+     tinte: violet | orange | coral | green
+     destino de cada pill:
+       { tipo: "categoria", valor: "Mobiliario" }  → filtra el catálogo por esa categoría o grupo
+                                                        (el valor debe existir tal cual en PRODUCTOS
+                                                        o en gruposCategorias más abajo en el <script>)
+       { tipo: "hero" }                            → sube de nuevo al hero (útil para "Seguridad",
+                                                        que hoy vive en el hero y no en el catálogo)
+       { tipo: "whatsapp", mensaje: "..." }        → abre WhatsApp con ese mensaje (para familias
+                                                        que todavía no tienen productos cargados)
+       { tipo: "construccion" }                    → muestra un aviso "Página en construcción"
+                                                        (para secciones que todavía no tienen
+                                                        contenido cargado, como "Seguridad" o
+                                                        "Educación") */
+        soluciones: {
+          titulo: "Más soluciones para empresas e instituciones",
+          texto:
+            "Además de nuestras soluciones de seguridad, ofrecemos mobiliario, material educativo y juegos infantiles para equipar, proteger y atender las diferentes necesidades de empresas, colegios e instituciones.",
+          // El orden de este arreglo es el orden en que se muestran las
+          // pills en TODAS las pantallas (desktop, tablet y mobile), ya
+          // que .solutions__pills no usa CSS "order": 1. Mobiliario,
+          // 2. Seguridad, 3. Educación, 4. Juegos infantiles.
+          pills: [
+            {
+              icono: "layers",
+              label: "Mobiliario",
+              tinte: "violet",
+              destino: { tipo: "categoria", valor: "Mobiliario" },
+            },
+            {
+              icono: "shield",
+              label: "Seguridad",
+              tinte: "coral",
+              // Sección aún sin contenido cargado: muestra el aviso
+              // "Página en construcción" en vez de filtrar/navegar.
+              destino: { tipo: "construccion" },
+            },
+            {
+              icono: "ruler",
+              label: "Educación",
+              tinte: "orange",
+              // Sección aún sin contenido cargado: muestra el aviso
+              // "Página en construcción" en vez de abrir WhatsApp.
+              destino: { tipo: "construccion" },
+            },
+            {
+              icono: "smile",
+              label: "Juegos infantiles",
+              tinte: "green",
+              destino: { tipo: "categoria", valor: "Juegos infantiles" },
+            },
+          ],
+        },
 
         /* ---- CONTACTO E INFORMACIÓN (bloque al final de la página) ----
      Deja un campo vacío ("") y no se muestra. Puedes agregar o quitar redes. */
@@ -2720,6 +3051,33 @@
             "Paleta de apoyo incluida",
             "Estructura metálica",
             "Asiento y espaldar plásticos",
+          ],
+        },
+
+        /* ---- Escritorios ---- */
+        {
+          id: "escritorio-azul",
+          nombre: "Escritorio escolar azul",
+          categoria: "Mobiliario",
+          descripcion:
+            "Escritorio escolar con estructura metálica tubular y bandeja portalibros inferior.",
+          detalle:
+            "Estructura metálica tubular acabada en pintura electrostática y cuenta con superficies plásticas de polipropileno de alto impacto en un llamativo color azul, además de incluir una bandeja inferior o portalibros de lámina metálica.",
+          material: "Metal y plástico",
+          meta: "Con bandeja portalibros",
+          ajuste: "contain",
+          fondo: "#f6f6f6",
+          imagenes: ["img/Escritorio-1.webp", "img/Escritorio-2.webp"],
+          ficha: {
+            Color: "Azul",
+            Estructura: "Metálica tubular",
+            Superficie: "Polipropileno de alto impacto",
+            Portalibros: "Bandeja de lámina metálica",
+          },
+          caracteristicas: [
+            "Estructura metálica tubular con pintura electrostática",
+            "Superficies plásticas en polipropileno de alto impacto",
+            "Bandeja inferior portalibros en lámina metálica",
           ],
         },
 
@@ -3356,6 +3714,99 @@
           `© ${new Date().getFullYear()} ${CONFIG.marca}. ${CONFIG.textoLegal || ""}`;
       }
 
+      /* ---------- "Más soluciones" (puente hero → catálogo) ---------- */
+      function initSolutions() {
+        const S = CONFIG.soluciones;
+        const section = $("#soluciones");
+        if (!S || !Array.isArray(S.pills) || !S.pills.length) {
+          if (section) section.hidden = true;
+          return;
+        }
+        $("#solutions-title").textContent = S.titulo || "";
+        $("#solutions-text").textContent = S.texto || "";
+        $("#solutions-pills").innerHTML = S.pills
+          .map((p, i) => {
+            const esWhatsapp = p.destino && p.destino.tipo === "whatsapp";
+            const tag = esWhatsapp ? "a" : "button";
+            const attrs =
+              esWhatsapp ?
+                `href="${wa(p.destino.mensaje || CONFIG.mensajeGeneral)}" target="_blank" rel="noopener"`
+              : `type="button"`;
+            return `<${tag} class="solutions__pill" data-tint="${esc(p.tinte || "violet")}" data-solution-i="${i}" ${attrs}>
+          <span class="ico"><svg class="i" aria-hidden="true"><use href="#i-${esc(p.icono || "spark")}"/></svg></span>
+          ${esc(p.label)}
+        </${tag}>`;
+          })
+          .join("");
+      }
+
+      /* Clic en una pill: filtra el catálogo o sube al hero. Los enlaces
+     de WhatsApp (destino.tipo === "whatsapp") son <a> normales, no
+     necesitan JS: el navegador ya los abre solo. */
+      $("#solutions-pills").addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-solution-i]");
+        if (!btn || btn.tagName === "A") return;
+        const p = (CONFIG.soluciones.pills || [])[+btn.dataset.solutionI];
+        const d = (p && p.destino) || {};
+        if (d.tipo === "hero") {
+          $("#hero-title")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        } else if (d.tipo === "categoria" && d.valor) {
+          state.cat = d.valor;
+          initFilters();
+          syncOptStyles();
+          resetVisibles();
+          render();
+          $("#catalogo")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        } else if (d.tipo === "construccion") {
+          openWip(p.label);
+        }
+      });
+
+      /* ---------- Aviso "Página en construcción" ----------
+     Modal ligero e independiente del modal de producto (#modal): no
+     comparte variables (cur/idx) ni el layout de galería, así que no
+     interfiere con esa lógica. */
+      const wipModal = $("#wip-modal");
+      let wipLastFocus = null;
+
+      function openWip(seccion) {
+        if (!wipModal) return;
+        wipLastFocus = document.activeElement;
+        $("#wip-kicker").textContent = seccion || "";
+        $("#wip-kicker").hidden = !seccion;
+        wipModal.hidden = false;
+        document.body.classList.add("no-scroll");
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => wipModal.classList.add("is-open")),
+        );
+        $("#wip-close")?.focus({ preventScroll: true });
+      }
+
+      function closeWip() {
+        if (!wipModal || wipModal.hidden) return;
+        wipModal.classList.remove("is-open");
+        document.body.classList.remove("no-scroll");
+        setTimeout(() => {
+          wipModal.hidden = true;
+        }, 220);
+        wipLastFocus &&
+          wipLastFocus.focus &&
+          wipLastFocus.focus({ preventScroll: true });
+      }
+
+      wipModal?.addEventListener("click", (e) => {
+        if (e.target.closest("[data-wip-close]")) closeWip();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && wipModal && !wipModal.hidden) closeWip();
+      });
+
       /* ---------- Filtros ---------- */
       let categoryOpen = false;
 
@@ -3840,6 +4291,7 @@
 
       /* ---------- Inicio ---------- */
       initTexts();
+      initSolutions();
       initFilters();
       syncOptStyles();
       render();
