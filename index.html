@@ -1284,6 +1284,80 @@
         }
       }
 
+      /* ---------- Modal "Seguridad" (imagen desktop / imagen responsive) ----------
+   Independiente de .modal y .wip-modal: solo muestra una imagen a pantalla
+   completa (webp/png) según el ancho de pantalla y se autocierra a los 10 s. */
+      .seg-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 650;
+        display: grid;
+        place-items: center;
+        padding: 16px;
+      }
+      .seg-modal[hidden] {
+        display: none;
+      }
+      .seg-modal__bg {
+        position: absolute;
+        inset: 0;
+        background: rgba(21, 16, 45, 0.78);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      .seg-modal__panel {
+        position: relative;
+        width: min(920px, 100%);
+        max-height: min(88vh, 920px);
+        background: #0e0b22;
+        border-radius: 20px;
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(18px) scale(0.97);
+        transition:
+          opacity 0.22s,
+          transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+      }
+      .seg-modal.is-open .seg-modal__bg {
+        opacity: 1;
+      }
+      .seg-modal.is-open .seg-modal__panel {
+        opacity: 1;
+        transform: none;
+      }
+      .seg-modal__img {
+        display: block;
+        width: 100%;
+        max-height: min(88vh, 920px);
+        object-fit: contain;
+        background: #0e0b22;
+      }
+      .seg-modal__close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1px solid var(--line);
+        display: grid;
+        place-items: center;
+        box-shadow: var(--shadow-sm);
+        z-index: 1;
+      }
+      .seg-modal__close:hover {
+        background: var(--violet-50);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .seg-modal__panel {
+          transition: none;
+        }
+      }
+
       .gallery {
         background: linear-gradient(180deg, #eeeafc, #f9f7ff);
         padding: 18px;
@@ -2344,6 +2418,22 @@
         <path d="M9.6 14.5h4.8M10.6 10.2h2.8" />
         <path d="M5 21h14" />
       </symbol>
+      <symbol id="i-extinguisher" viewBox="0 0 24 24">
+        <path d="M12 2v3" />
+        <path d="M9 5h6" />
+        <rect x="8" y="8" width="8" height="13" rx="2.5" />
+        <path d="M8 12.5h8" />
+        <path d="M16 10c2 .4 3 2 3 2" />
+        <path d="m19 12 1.5 1.5" />
+      </symbol>
+      <symbol id="i-book" viewBox="0 0 24 24">
+        <path
+          d="M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2V4Z"
+        />
+        <path
+          d="M22 4h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7V4Z"
+        />
+      </symbol>
     </svg>
 
     <noscript
@@ -2770,6 +2860,38 @@
         </p>
       </div>
     </div>
+    
+    <div class="seg-modal" id="seg-modal" hidden>
+      <div class="seg-modal__bg" data-seg-close></div>
+      <div
+        class="seg-modal__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Seguridad — extintores y señalización"
+      >
+        <button
+          class="seg-modal__close"
+          id="seg-close"
+          type="button"
+          data-seg-close
+          aria-label="Cerrar"
+        >
+          <svg class="i" aria-hidden="true"><use href="#i-x" /></svg>
+        </button>
+        <picture>
+          <source
+            media="(max-width: 920px), (hover: none) and (pointer: coarse)"
+            srcset="img/responsive-seguridad.webp"
+          />
+          <img
+            class="seg-modal__img"
+            id="seg-modal-img"
+            src="img/desktop-seguridad.webp"
+            alt="Seguridad — extintores y elementos de señalización"
+          />
+        </picture>
+      </div>
+    </div>
     <!-- ============================ WHATSAPP FLOTANTE ============================ -->
     <a
       class="wa-float"
@@ -2857,7 +2979,7 @@
         ],
 
         /* ---- SECCIÓN "MÁS SOLUCIONES" (puente entre el hero y el catálogo) ----
-     icono: shield | layers | ruler | smile | spark | tool | users (ver <symbol id="i-..."> en el <svg> del inicio del body)
+     icono: shield | layers | ruler | smile | spark | tool | users | extinguisher | book (ver <symbol id="i-..."> en el <svg> del inicio del body)
      tinte: violet | orange | coral | green
      destino de cada pill:
        { tipo: "categoria", valor: "Mobiliario" }  → filtra el catálogo por esa categoría o grupo
@@ -2887,15 +3009,16 @@
               destino: { tipo: "categoria", valor: "Mobiliario" },
             },
             {
-              icono: "shield",
+              icono: "extinguisher",
               label: "Seguridad",
               tinte: "coral",
-              // Sección aún sin contenido cargado: muestra el aviso
-              // "Página en construcción" en vez de filtrar/navegar.
-              destino: { tipo: "construccion" },
+              // Abre el modal de imagen "Seguridad" (desktop/responsive,
+              // se autocierra a los 10 s) y además filtra el catálogo
+              // por la categoría "Seguridad" (extintores y señalización).
+              destino: { tipo: "seguridad", valor: "Seguridad" },
             },
             {
-              icono: "ruler",
+              icono: "book",
               label: "Educación",
               tinte: "orange",
               // Sección aún sin contenido cargado: muestra el aviso
@@ -3280,6 +3403,181 @@
             "Dos puertas",
             "Entrepaño interior",
             "Textura tipo tejido",
+          ],
+        },
+
+        /* ============ SEGURIDAD (oculto: solo aparece por filtro o por la
+     pill "Seguridad"; ver esOculta() más abajo) ============ */
+        {
+          id: "extintor-agua",
+          nombre: "Extintor de agua",
+          categoria: "Seguridad",
+          descripcion:
+            "Extintor a presión con agente a base de agua, incluye soporte de pared y aviso.",
+          detalle:
+            "Cilindro con agente extintor a base de agua a presión. Incluye soporte de pared, manguera y aviso de señalización. Disponible en varias capacidades.",
+          material: "Agua a presión",
+          meta: "Incluye soporte y aviso",
+          ajuste: "contain",
+          fondo: "#f6f6f6",
+          imagenes: ["img/extintor agua-1.webp", "img/extintor-agua-2.webp"],
+          ficha: {
+            "Agente extintor": "Agua a presión",
+            Presentación: "Cilindro metálico rojo",
+            Incluye: "Soporte de pared y aviso de señalización",
+            Recarga: "Certificada según norma NTC 2885",
+          },
+          caracteristicas: [
+            "Agente a base de agua",
+            "Incluye soporte de pared",
+            "Incluye aviso de señalización",
+            "Disponible en varias capacidades",
+          ],
+        },
+        {
+          id: "extintor-co2",
+          nombre: "Extintor de CO2",
+          categoria: "Seguridad",
+          descripcion:
+            "Extintor de gas carbónico (CO2), incluye soporte de pared y aviso.",
+          detalle:
+            "Cilindro con agente extintor a base de gas carbónico (CO2). Incluye soporte de pared, manguera difusora y aviso de señalización. Disponible en varias capacidades.",
+          material: "Gas carbónico (CO2)",
+          meta: "Incluye soporte y aviso",
+          ajuste: "contain",
+          fondo: "#f6f6f6",
+          imagenes: [
+            "img/extintor-co2 -1.webp",
+            "img/extintor-co2 -2.webp",
+          ],
+          ficha: {
+            "Agente extintor": "Gas carbónico (CO2)",
+            Presentación: "Cilindro metálico rojo con difusor",
+            Incluye: "Soporte de pared y aviso de señalización",
+            Recarga: "Certificada según norma NTC 2885",
+          },
+          caracteristicas: [
+            "Agente a base de gas carbónico",
+            "Manguera difusora",
+            "Incluye soporte de pared",
+            "Disponible en varias capacidades",
+          ],
+        },
+        {
+          id: "extintor-multiproposito",
+          nombre: "Extintor multipropósito",
+          categoria: "Seguridad",
+          descripcion:
+            "Extintor de polvo químico multipropósito (ABC), incluye soporte de pared y aviso.",
+          detalle:
+            "Cilindro con agente extintor a base de polvo químico multipropósito (ABC). Incluye soporte de pared, manguera y aviso de señalización. Disponible en varias capacidades.",
+          material: "Polvo químico multipropósito (ABC)",
+          meta: "Incluye soporte y aviso",
+          ajuste: "contain",
+          fondo: "#f6f6f6",
+          imagenes: [
+            "img/extintor-multiproposito -1.webp",
+            "img/extintor-multiproposito -2.webp",
+          ],
+          ficha: {
+            "Agente extintor": "Polvo químico multipropósito (ABC)",
+            Presentación: "Cilindro metálico rojo",
+            Incluye: "Soporte de pared y aviso de señalización",
+            Recarga: "Certificada según norma NTC 2885",
+          },
+          caracteristicas: [
+            "Agente a base de polvo químico ABC",
+            "Incluye soporte de pared",
+            "Incluye aviso de señalización",
+            "Disponible en varias capacidades",
+          ],
+        },
+        {
+          id: "extintor-tipo-k",
+          nombre: "Extintor tipo K",
+          categoria: "Seguridad",
+          descripcion:
+            "Extintor con agente húmedo tipo K, incluye soporte de pared y aviso.",
+          detalle:
+            "Cilindro con agente extintor húmedo tipo K, formulado para cocinas industriales. Incluye soporte de pared, manguera y aviso de señalización.",
+          material: "Agente húmedo tipo K",
+          meta: "Incluye soporte y aviso",
+          ajuste: "contain",
+          fondo: "#f6f6f6",
+          imagenes: [
+            "img/extintor tipo k-1.webp",
+            "img/extintor tipo k-2.webp",
+          ],
+          ficha: {
+            "Agente extintor": "Húmedo tipo K",
+            Presentación: "Cilindro metálico rojo",
+            Incluye: "Soporte de pared y aviso de señalización",
+            Recarga: "Certificada según norma NTC 2885",
+          },
+          caracteristicas: [
+            "Agente húmedo tipo K",
+            "Pensado para cocinas industriales",
+            "Incluye soporte de pared",
+            "Incluye aviso de señalización",
+          ],
+        },
+        {
+          id: "extintor-solkaflam",
+          nombre: "Extintor Solkaflam",
+          categoria: "Seguridad",
+          descripcion:
+            "Extintor de agente limpio Solkaflam, incluye soporte de pared y aviso.",
+          detalle:
+            "Cilindro con agente extintor limpio Solkaflam, no conductor y sin residuos. Incluye soporte de pared, manguera y aviso de señalización.",
+          material: "Agente limpio Solkaflam",
+          meta: "Incluye soporte y aviso",
+          ajuste: "contain",
+          fondo: "#f6f6f6",
+          imagenes: [
+            "img/extintor-solkaflam-1.webp",
+            "img/extintor-solkaflam-2.webp",
+          ],
+          ficha: {
+            "Agente extintor": "Solkaflam (agente limpio)",
+            Presentación: "Cilindro metálico rojo",
+            Incluye: "Soporte de pared y aviso de señalización",
+            Recarga: "Certificada según norma NTC 2885",
+          },
+          caracteristicas: [
+            "Agente limpio, no conductor",
+            "No deja residuos",
+            "Incluye soporte de pared",
+            "Incluye aviso de señalización",
+          ],
+        },
+
+        {
+          id: "senalizacion-emergencia",
+          nombre: "Señalización",
+          categoria: "Seguridad",
+          descripcion:
+            "Set de avisos de señalización para rutas de evacuación y equipos de emergencia.",
+          detalle:
+            "Set de avisos en material resistente para identificar rutas de evacuación, salidas y ubicación de equipos de emergencia. Toca las miniaturas para ver cada aviso.",
+          material: "Señalización",
+          meta: "Set de varios avisos",
+          etiqueta: { texto: "Set", color: "verde" },
+          ajuste: "contain",
+          fondo: "#f6f6f6",
+          imagenes: [
+            "img/senalizacion-1.jfif",
+            "img/senalizacion-2.webp",
+            "img/senalizacion-3.webp",
+            "img/senalizacion-4.webp",
+          ],
+          ficha: {
+            Presentación: "Lámina rígida",
+            Uso: "Rutas de evacuación y equipos de emergencia",
+          },
+          caracteristicas: [
+            "Varios avisos en un mismo set",
+            "Material resistente para interiores",
+            "Fácil instalación en pared",
           ],
         },
 
@@ -3763,9 +4061,51 @@
             behavior: "smooth",
             block: "start",
           });
+        } else if (d.tipo === "seguridad") {
+          state.cat = d.valor || "Seguridad";
+          initFilters();
+          syncOptStyles();
+          resetVisibles();
+          render();
+          openSeg();
         } else if (d.tipo === "construccion") {
           openWip(p.label);
         }
+      });
+
+      /* ---------- Modal "Seguridad" (imagen desktop / responsive) ----------
+     Independiente de #modal y #wip-modal. Se autocierra a los 10 s; el
+     cierre manual (X, click fuera o Escape) cancela ese temporizador. */
+      const segModal = $("#seg-modal");
+      let segLastFocus = null;
+      let segTimer = null;
+
+      function openSeg() {
+        if (!segModal) return;
+        segLastFocus = document.activeElement;
+        segModal.hidden = false;
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => segModal.classList.add("is-open")),
+        );
+        $("#seg-close").focus({ preventScroll: true });
+        clearTimeout(segTimer);
+        segTimer = setTimeout(closeSeg, 10000);
+      }
+      function closeSeg() {
+        if (!segModal || segModal.hidden) return;
+        clearTimeout(segTimer);
+        segModal.classList.remove("is-open");
+        setTimeout(() => {
+          segModal.hidden = true;
+        }, 220);
+        if (segLastFocus && document.contains(segLastFocus))
+          segLastFocus.focus({ preventScroll: true });
+      }
+      segModal?.addEventListener("click", (e) => {
+        if (e.target.closest("[data-seg-close]")) closeSeg();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && segModal && !segModal.hidden) closeSeg();
       });
 
       /* ---------- Aviso "Página en construcción" ----------
@@ -3819,7 +4159,11 @@
           PRODUCTOS.filter((p) => g.hijos.includes(p.categoria)).length;
         const used = new Set();
         const parts = [
-          optCat("Todos", "Todos los productos", PRODUCTOS.length),
+          optCat(
+            "Todos",
+            "Todos los productos",
+            PRODUCTOS.filter((p) => p.categoria !== "Seguridad").length,
+          ),
         ];
         for (const g of gruposCategorias) {
           const hijos = g.hijos.filter((c) => categorias.includes(c));
@@ -3877,7 +4221,11 @@
 
       function filtrar() {
         let lista = PRODUCTOS.filter((p) => {
-          if (state.cat !== "Todos") {
+          if (state.cat === "Todos") {
+            // "Seguridad" queda oculta de la vista general: solo aparece
+            // al elegir su filtro o entrar por la pill "Seguridad".
+            if (p.categoria === "Seguridad") return false;
+          } else {
             const grupo = gruposCategorias.find((g) => g.id === state.cat);
             if (grupo) {
               if (!grupo.hijos.includes(p.categoria)) return false;
